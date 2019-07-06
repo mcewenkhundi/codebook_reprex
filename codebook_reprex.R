@@ -1,10 +1,10 @@
-suppressPackageStartupMessages(library(reprex))
-suppressPackageStartupMessages(library(dplyr))
-suppressPackageStartupMessages(library(codebook))
-suppressPackageStartupMessages(library(labelled))
+suppressWarnings(library(reprex))
+suppressWarnings(library(dplyr))
+suppressWarnings(library(codebook))
+suppressWarnings(library(labelled))
 
 df <- data_frame(s1 = c("M", "M", "F"), 
-                 s2 = c("1", "1", "2")) 
+                 s2 = c(1, 1, 2)) 
 
 dict <- data_frame(variable = c("s1","s2"), 
                    label = c("gender","alive"), 
@@ -33,6 +33,13 @@ dict_labels <- dict %>%
 v_list <- dict_labels %>% split(.$variable) %>%
   map(~purrr::set_names(.$value, .$label))
 
+df <- df %>%
+        map_at(names(v_list),as.character) %>%
+        as_tibble()
+
 val_labels(df) <- v_list
 
+val_labels(df)
+
 look_for(df, details = TRUE)
+df
